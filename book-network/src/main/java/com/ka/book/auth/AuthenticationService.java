@@ -1,6 +1,7 @@
 package com.ka.book.auth;
 
 
+import com.ka.book.email.EmailService;
 import com.ka.book.role.RoleRepository;
 import com.ka.book.user.Token;
 import com.ka.book.user.TokenRepository;
@@ -22,6 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
     public void register(RegistrationRequest request) {
         var userRole = roleRepository.findByName("USER")
