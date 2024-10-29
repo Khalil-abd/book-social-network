@@ -1,13 +1,17 @@
 package com.ka.book.auth;
 
 
+import com.ka.book.email.EmailDetails;
 import com.ka.book.email.EmailService;
+import com.ka.book.email.EmailTemplateName;
 import com.ka.book.role.RoleRepository;
 import com.ka.book.user.Token;
 import com.ka.book.user.TokenRepository;
 import com.ka.book.user.User;
 import com.ka.book.user.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +28,10 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
-    public void register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 //TODO Exception handling
                 .orElseThrow(() -> new IllegalStateException("Role USER is not initialized"));
@@ -40,12 +46,19 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
         sendValidationEmail(user);
-
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
-        // TODO : send email
+        EmailDetails emailDetails = new EmailDetails(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                newToken,
+                "Account Activation"
+        );
+        emailService.sendEmail(emailDetails);
     }
 
     private String generateAndSaveActivationToken(User user) {
