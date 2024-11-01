@@ -1,5 +1,6 @@
 package com.ka.bsn.handler;
 
+import com.ka.bsn.exception.OperationNotPermitedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -82,6 +83,17 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .validationErrors(errors)
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(OperationNotPermitedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(OperationNotPermitedException exception) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exception.getMessage())
                                 .build()
                 );
     }

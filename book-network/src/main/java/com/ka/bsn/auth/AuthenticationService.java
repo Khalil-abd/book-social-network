@@ -59,7 +59,7 @@ public class AuthenticationService {
         var newToken = generateAndSaveActivationToken(user);
         EmailDetails emailDetails = new EmailDetails(
                 user.getEmail(),
-                user.fullName(),
+                user.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
                 newToken,
@@ -102,7 +102,7 @@ public class AuthenticationService {
         );
         var claims = new HashMap<String, Object>();
         var user = ((User) auth.getPrincipal());
-        claims.put("fullname", user.fullName());
+        claims.put("fullname", user.getFullName());
         var jwtToken = jwtService.generateToken(claims, user);
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
