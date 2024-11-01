@@ -1,5 +1,6 @@
 package com.ka.bsn.book;
 
+import com.ka.bsn.history.BookTransactionHistory;
 import org.mapstruct.*;
 
 @Mapper(
@@ -14,5 +15,13 @@ public interface BookMapper {
     Book toBook(BookRequest request);
 
     @Mapping(target = "bookCover", ignore = true)
+    @Mapping(target = "owner", source = "owner.fullName")
     BookResponse toBookResponse(Book book);
+
+    @Mapping(target = "id", source = "book.id")
+    @Mapping(target = "title", source = "book.title")
+    @Mapping(target = "authorName", source = "book.authorName")
+    @Mapping(target = "isbn", source = "book.isbn")
+    @Mapping(target = "rate", source = "book.rate")
+    BorrowedBookResponse toBorrowedBookResponse(BookTransactionHistory history);
 }
