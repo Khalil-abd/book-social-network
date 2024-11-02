@@ -2,6 +2,7 @@ package com.ka.bsn.book;
 
 import com.ka.bsn.exception.OperationNotPermitedException;
 import com.ka.bsn.common.PageResponse;
+import com.ka.bsn.file.FileStorageService;
 import com.ka.bsn.history.BookTransactionHistory;
 import com.ka.bsn.history.BookTransactionHistoryRepository;
 import com.ka.bsn.user.User;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +28,7 @@ public class BookServiceImpl implements BookService{
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final BookTransactionHistoryRepository transactionHistoryRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
     public Long save(BookRequest request, Authentication connectedUser) {
@@ -210,5 +213,15 @@ public class BookServiceImpl implements BookService{
 
         bookTransaction.setReturnApproved(true);
         return transactionHistoryRepository.save(bookTransaction).getId();
+    }
+
+    @Override
+    public void uploadBookCover(MultipartFile file, Long bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        var bookCover = fileStorageService.saveFile(file, user.getId());
+        book.setBookCover(bookCover);
+        bookRepository.save(book);
     }
 }
