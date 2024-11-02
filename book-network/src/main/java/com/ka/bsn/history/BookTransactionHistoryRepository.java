@@ -42,7 +42,7 @@ public interface BookTransactionHistoryRepository extends JpaRepository<BookTran
             AND transaction.returned = false
             AND transaction.returnApproved = false
             """)
-    Optional<BookTransactionHistory> findBorrowedBookByUserId(Long bookId, Long id);
+    Optional<BookTransactionHistory> findBorrowedBookByUserId(Long bookId, Long userId);
 
     @Query("""
             SELECT transaction
