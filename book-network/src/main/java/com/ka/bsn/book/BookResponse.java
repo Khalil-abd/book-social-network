@@ -8,7 +8,7 @@ public record BookResponse(
         String synopsis,
         String owner,
         double rate,
-        byte[] bookCover,
+        byte[] cover,
         boolean archived,
         boolean shareable
 ) {

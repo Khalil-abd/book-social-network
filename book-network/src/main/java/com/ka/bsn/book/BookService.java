@@ -2,6 +2,7 @@ package com.ka.bsn.book;
 
 import com.ka.bsn.common.PageResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface BookService {
     Long save(BookRequest request, Authentication connectedUser);
@@ -25,4 +26,6 @@ public interface BookService {
     Long returnBook(Long bookId, Authentication connectedUser);
 
     Long approveReturnBook(Long bookId, Authentication connectedUser);
+
+    void uploadBookCover(MultipartFile file, Long bookId, Authentication connectedUser);
 }

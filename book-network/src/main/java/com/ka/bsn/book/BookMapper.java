@@ -1,5 +1,6 @@
 package com.ka.bsn.book;
 
+import com.ka.bsn.file.FileUtils;
 import com.ka.bsn.history.BookTransactionHistory;
 import org.mapstruct.*;
 
@@ -7,14 +8,15 @@ import org.mapstruct.*;
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        imports = FileUtils.class
 )
 public interface BookMapper {
 
     @Mapping(target = "archived", constant = "false")
     Book toBook(BookRequest request);
 
-    @Mapping(target = "bookCover", ignore = true)
+    @Mapping(target = "cover", expression = "java(FileUtils.readFileFromLocation(book.getBookCover()))")
     @Mapping(target = "owner", source = "owner.fullName")
     BookResponse toBookResponse(Book book);
 
