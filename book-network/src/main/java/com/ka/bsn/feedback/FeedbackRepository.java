@@ -9,7 +9,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     @Query("""
             SELECT feedback
             FROM Feedback feedback
-            WHERE feedback.book.id = :booId
+            WHERE feedback.book.id = :bookId
             """)
     Page<Feedback> findAllByBookId(Long bookId, Pageable pageable);
 }
