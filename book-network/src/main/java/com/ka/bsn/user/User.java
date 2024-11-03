@@ -88,6 +88,6 @@ public class User implements UserDetails, Principal {
     }
 
     public String getFullName(){
-        return this.lastName + " " + this.firstName;
+        return this.firstName + " " + this.lastName;
     }
 }

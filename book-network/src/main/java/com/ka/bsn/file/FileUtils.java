@@ -15,7 +15,7 @@ public class FileUtils {
 
     public static byte[] readFileFromLocation(String fileUrl){
         if(fileUrl == null || fileUrl.isBlank()){
-            return null;
+            return new byte[0];
         }
         try {
             Path filePath = new File(fileUrl).toPath();
@@ -23,6 +23,6 @@ public class FileUtils {
         }catch (IOException e){
             log.warn("No file found in the path {}", fileUrl);
         }
-        return null;
+        return new byte[0];
     }
 }
