@@ -4,6 +4,7 @@ package com.ka.bsn.auth;
 import com.ka.bsn.email.EmailDetails;
 import com.ka.bsn.email.EmailService;
 import com.ka.bsn.email.EmailTemplateName;
+import com.ka.bsn.exception.OperationNotPermitedException;
 import com.ka.bsn.role.RoleRepository;
 import com.ka.bsn.security.JwtService;
 import com.ka.bsn.user.Token;
@@ -11,6 +12,7 @@ import com.ka.bsn.user.TokenRepository;
 import com.ka.bsn.user.User;
 import com.ka.bsn.user.UserRepository;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -110,12 +112,11 @@ public class AuthenticationService {
 
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
-                // TODO Handle Exception
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
+                .orElseThrow(() -> new EntityNotFoundException("Token not found :: "+token));
         if(LocalDateTime.now().isAfter(savedToken.getExpiresAt()))
         {
             sendValidationEmail(savedToken.getUser());
-            throw new RuntimeException("Activation token has expired. " +
+            throw new OperationNotPermitedException("Activation token has expired. " +
                     "A new token has been sent to the same email address!");
         }
         var user = userRepository.findById(savedToken.getUser().getId())

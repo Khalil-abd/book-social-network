@@ -30,6 +30,10 @@ public class BookServiceImpl implements BookService{
     private final BookTransactionHistoryRepository transactionHistoryRepository;
     private final FileStorageService fileStorageService;
 
+
+    private static final String BOOK_NOT_FOUND = "No book found with ID:: ";
+    private static final String CREATED_DATE = "createdDate";
+
     @Override
     public Long save(BookRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
@@ -42,13 +46,13 @@ public class BookServiceImpl implements BookService{
     public BookResponse findById(Long bookId) {
         return bookRepository.findById(bookId)
                 .map(bookMapper::toBookResponse)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
     }
 
     @Override
     public PageResponse<BookResponse> findAllBooks(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<Book> books = bookRepository.findAllDisplayableBooks(pageable, user.getId());
         List<BookResponse> bookResponses = books.stream()
                 .map(bookMapper::toBookResponse)
@@ -67,7 +71,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public PageResponse<BookResponse> findAllBooksByOwner(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<Book> books = bookRepository.findAll(withOwnerId(user.getId()), pageable);
         List<BookResponse> bookResponses = books.stream()
                 .map(bookMapper::toBookResponse)
@@ -86,7 +90,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepository
                 .findAllBorrowedBooks(pageable, user.getId());
         List<BorrowedBookResponse> bookResponses = allBorrowedBooks.stream()
@@ -107,7 +111,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public PageResponse<BorrowedBookResponse> findAllReturnedBooks(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepository
                 .findAllReturnedBooks(pageable, user.getId());
         List<BorrowedBookResponse> bookResponses = allBorrowedBooks.stream()
@@ -128,7 +132,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long updateShareableStatus(Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot update others books shareable status");
@@ -141,7 +145,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long updateArchivedStatus(Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot update others books archived status");
@@ -154,7 +158,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long borrowBook(Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         if(book.isArchived() || !book.isShareable()){
             throw new OperationNotPermitedException("The requested book cannot be borrowed since it is archived or not shareable");
         }
@@ -178,7 +182,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long returnBook(Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot borrow or return your own book");
@@ -200,7 +204,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long approveReturnBook(Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot approve the return of a book you do not own");
@@ -218,7 +222,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public void uploadBookCover(MultipartFile file, Long bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: "+bookId));
+                .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
         var bookCover = fileStorageService.saveFile(file, user.getId());
         book.setBookCover(bookCover);
