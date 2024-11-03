@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "api-gen" : "ng-openapi-gen --input ./src/openapi/openapi.json --output ./src/app/services"
+    "api-gen" : "ng-openapi-gen --input http://localhost:8088/api/v1/v3/api-docs --output ./src/app/services"
   },
   "private": true,
   "dependencies": {
