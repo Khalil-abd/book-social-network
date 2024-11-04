@@ -1,0 +1,29 @@
+@if (submitted) {
+  <div class="container">
+    @if (isOkay) {
+      <div class="activate-message">
+        <h2>Activation successful</h2>
+        <p>Your account has been activated successfully !</p>
+        <button class="btn btn-primary" (click)="redirectToLogin()">Go to login</button>
+      </div>
+    } @else {
+      <div class="activate-error">
+        <h2>Activation failed</h2>
+        <p>{{ message }}</p>
+        <button class="btn btn-primary" (click)="submitted = false">Try again</button>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="container">
+    <div class="text-center" style="width: 400px;">
+      <h2>Type tour activation code</h2>
+      <code-input
+        [isCodeHidden]="false"
+        [codeLength]="6"
+        [code]="'number'"
+        (codeCompleted)="onCodeCompleted($event)"
+      ></code-input>
+    </div>
+  </div>
+}
