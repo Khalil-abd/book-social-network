@@ -1,10 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BookResponse} from '../../../../services/models/book-response';
+import {RatingComponent} from "../rating/rating.component";
 
 @Component({
   selector: 'app-book-card',
   standalone: true,
-  imports: [],
+  imports: [
+    RatingComponent
+  ],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss'
 })
