@@ -28,15 +28,15 @@
     </div>
     @if(manage){
       <div class="d-flex gap-2">
-        <i (click)="onEdit()" class="fas fa-edit text-success"></i>
-        <i (click)="onShare()" class="fas fa-share-nodes text-primary"></i>
-        <i (click)="onArchive()" class="fas fa-archive text-danger"></i>
+        <i (click)="onEdit()" class="fas fa-edit text-success" title="Edit the book"></i>
+        <i (click)="onShare()" class="fas fa-share-nodes text-primary" title="Toggle share the book"></i>
+        <i (click)="onArchive()" class="fas fa-archive text-danger" title="Toggle archive the book"></i>
       </div>
     } @else {
       <div class="d-flex gap-2">
-        <i (click)="onShowDetails()" class="fas fa-circle-info text-primary"></i>
-        <i (click)="onBorrow()" class="fas fa-list-check text-primary"></i>
-        <i (click)="onAddToWaitingList()" class="fas fa-heart text-danger"></i>
+        <i (click)="onShowDetails()" class="fas fa-circle-info text-primary" title="Show book details"></i>
+        <i (click)="onBorrow()" class="fas fa-list-check text-primary" title="Borrow the book"></i>
+        <i (click)="onAddToWaitingList()" class="fas fa-heart text-danger" title="Add the book to your waiting list"></i>
       </div>
     }
   </div>
