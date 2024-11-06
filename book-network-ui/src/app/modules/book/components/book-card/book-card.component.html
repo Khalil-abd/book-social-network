@@ -21,7 +21,10 @@
   </div>
   <div class="card-footer d-flex gap-2 justify-content-between align-items-center">
     <div class="d-flex gap-2">
-      5 stars
+      <app-rating [rating]="book.rate || 0"></app-rating>
+      @if (book.rate || 0 > 0){
+        <span class="fw-bold">{{book.rate}}</span>
+      }
     </div>
     @if(manage){
       <div class="d-flex gap-2">
