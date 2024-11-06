@@ -1,9 +1,19 @@
 <h3>Books List</h3>
+@if(message){
+  <div
+    class="alert"
+    [class.alert-success]="level === 'success'"
+    [class.alert-danger]="level === 'error'"
+  >
+    {{message}}
+  </div>
+}
 <hr/>
 <div class="d-flex justify-content-start gap-2 flex-wrap">
   @for (book of bookResponse.content; track book.id) {
     <app-book-card
       [book]="book"
+      (borrow)="borrowBook($event)"
     >
     </app-book-card>
   }
