@@ -15,7 +15,8 @@ export class BookCardComponent {
 
   private _book: BookResponse = {};
   private _manage: boolean= false;
-  private _bookCover: string | undefined;
+  private readonly _bookCover: string | undefined;
+  private _defaultCover = 'assets/images/product-not-found.png'
 
 
   get manage(): boolean {
@@ -30,8 +31,9 @@ export class BookCardComponent {
   get bookCover(): string | undefined {
     if(this._book.cover){
       return 'data:image/jpg;base64,'+this._book.cover;
+    }else{
+      return this._defaultCover;
     }
-    return this._bookCover;
   }
 
   get book(): BookResponse {
