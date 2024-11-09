@@ -16,6 +16,8 @@ public interface BookMapper {
     @Mapping(target = "archived", constant = "false")
     Book toBook(BookRequest request);
 
+    Book updateBook(@MappingTarget Book book, BookRequest request);
+
     @Mapping(target = "cover", expression = "java(FileUtils.readFileFromLocation(book.getBookCover()))")
     @Mapping(target = "owner", source = "owner.fullName")
     BookResponse toBookResponse(Book book);

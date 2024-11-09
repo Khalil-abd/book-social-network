@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {BookCardComponent} from '../../components/book-card/book-card.component';
 import {PageResponseBookResponse} from '../../../../services/models/page-response-book-response';
 import {BookService} from '../../../../services/services/book.service';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {BookResponse} from '../../../../services/models/book-response';
 
 @Component({
@@ -24,7 +24,8 @@ export class MyBooksComponent implements OnInit{
   private _isLastPage: boolean = false;
 
   constructor(
-    private bookService: BookService
+    private bookService: BookService,
+    private router: Router
   ) {
   }
 
@@ -81,7 +82,7 @@ export class MyBooksComponent implements OnInit{
       'book-id': book.id as number
     }).subscribe({
       next: () =>{
-
+        book.archived = !book.archived;
       },
       error: (err) =>{
         console.log(err);
@@ -94,7 +95,7 @@ export class MyBooksComponent implements OnInit{
       'book-id': book.id as number
     }).subscribe({
       next: () =>{
-
+        book.shareable = !book.shareable;
       },
       error: (err) =>{
         console.log(err);
@@ -104,5 +105,6 @@ export class MyBooksComponent implements OnInit{
 
   editBook(book: BookResponse) {
     console.log(book);
+    this.router.navigate(['books', 'manage', book.id]);
   }
 }
