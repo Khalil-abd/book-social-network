@@ -1,6 +1,9 @@
 <div
   class="card"
   style="width: 20rem;"
+  [class.border-success]="manage && book.shareable"
+  [class.border-warning]="manage && book.archived"
+  [class.border-2]="manage"
 >
   <img [src]="bookCover" height="200" class="card-img-top" alt="...">
   <div class="card-body overflow-auto">

@@ -37,7 +37,14 @@ public class BookServiceImpl implements BookService{
     @Override
     public Long save(BookRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        Book book = bookMapper.toBook(request);
+        Book book;
+        if(request.id() != null){
+            book = bookRepository.findById(request.id())
+                    .orElseThrow(()->new EntityNotFoundException(BOOK_NOT_FOUND + request.id()));
+            book = bookMapper.updateBook(book, request);
+        }else{
+            book = bookMapper.toBook(request);
+        }
         book.setOwner(user);
         return bookRepository.save(book).getId();
     }
@@ -209,8 +216,6 @@ public class BookServiceImpl implements BookService{
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot approve the return of a book you do not own");
         }
-
-
         BookTransactionHistory bookTransaction = transactionHistoryRepository
                 .findReturnedBookToApprove(bookId)
                 .orElseThrow(() -> new OperationNotPermitedException("You did not borrow this book") );
@@ -221,6 +226,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void uploadBookCover(MultipartFile file, Long bookId, Authentication connectedUser) {
+        if(file == null){
+            throw new OperationNotPermitedException("No cover picture provided!");
+        }
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookId));
         User user = (User) connectedUser.getPrincipal();
