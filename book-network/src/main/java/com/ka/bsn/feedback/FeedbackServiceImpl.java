@@ -32,7 +32,14 @@ public class FeedbackServiceImpl implements FeedbackService{
         if(Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermitedException("You cannot give feedback on your own book");
         }
-        Feedback feedback = mapper.toFeedback(request);
+        Feedback feedback;
+        if(request.id() != null){
+            feedback = feedbackRepository.findById(request.id())
+                    .orElseThrow(() -> new EntityNotFoundException("No feedback found with ID:: "+request.id()));
+            feedback = mapper.updateFeedback(feedback, request);
+        }else{
+            feedback = mapper.toFeedback(request);
+        }
         return feedbackRepository.save(feedback).getId();
     }
 

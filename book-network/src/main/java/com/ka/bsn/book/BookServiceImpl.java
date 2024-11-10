@@ -195,7 +195,7 @@ public class BookServiceImpl implements BookService{
             throw new OperationNotPermitedException("You cannot borrow or return your own book");
         }
         final boolean isBorrowed = transactionHistoryRepository.isAlreadyBorrowed(bookId);
-        if(isBorrowed){
+        if(!isBorrowed){
             throw new OperationNotPermitedException("The book is not borrowed");
         }
 

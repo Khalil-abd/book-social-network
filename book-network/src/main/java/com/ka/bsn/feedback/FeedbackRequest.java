@@ -3,6 +3,7 @@ package com.ka.bsn.feedback;
 import jakarta.validation.constraints.*;
 
 public record FeedbackRequest(
+        Long id,
         @Positive(message = "200")
         @Min(value = 0, message = "201")
         @Max(value = 5, message = "202")
