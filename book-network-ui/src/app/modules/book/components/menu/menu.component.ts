@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import {routes} from '../../../../app.routes';
 
 @Component({
   selector: 'app-menu',
@@ -15,8 +16,9 @@ export class MenuComponent implements OnInit{
     this.activeMenu();
   }
 
-
   logout() {
+    localStorage.clear();
+    window.location.reload();
   }
 
   private activeMenu() {
