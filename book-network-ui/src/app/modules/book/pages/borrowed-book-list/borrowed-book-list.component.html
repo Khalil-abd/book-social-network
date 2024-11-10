@@ -90,10 +90,11 @@
           <td>
             <div class="d-flex gap-2">
 
-              <i *ngIf="book.returned" class="fa-regular fa-paper-plane text-primary"></i>
-              <i *ngIf="!book.returned" (click)="returnBorrowedBook(book)"
-                 class="fa-solid fa-paper-plane text-success clickable" (keydown)="null"></i>
-              <i class="fa-solid fa-circle-check" [class.text-success]="book.returnApproved"></i>
+              <i *ngIf="book.returned" class="fa-regular fa-paper-plane text-success" title="Book Returned"></i>
+              <i *ngIf="!book.returned" (click)="returnBorrowedBook(book)" title="Return the book"
+                 class="fa-solid fa-paper-plane text-primary clickable" (keydown)="null"></i>
+              <i *ngIf="book.returned" class="fa-solid fa-circle-check" [class.text-success]="book.returnApproved"
+                 [title]="book.returnApproved ? 'Return approved' : 'Return not approved'"></i>
             </div>
           </td>
         </tr>
