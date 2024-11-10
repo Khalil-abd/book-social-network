@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -34,3 +34,11 @@ application:
     jwt:
       secret-key: P7j94E6bNNVTF4crNoyxVwVEIaWohejnv0PLbU7NJxwxGnDKQJrsMQ3HbBpzeXUW
       expiration: 86400000
+  mailing:
+    frontend:
+      activation-url: http://localhost:4200/activate-account
+  file:
+    upload:
+      photos-output-path: ../uploads
+server:
+  port: 8088
