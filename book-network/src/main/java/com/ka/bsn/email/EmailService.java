@@ -27,9 +27,9 @@ public class EmailService {
     public void sendEmail(EmailDetails emailDetails) throws MessagingException {
         String templateName;
         if(emailDetails.emailTemplate() == null)
-            templateName = "confirme_email";
+            templateName = "confirm_email";
         else
-            templateName = emailDetails.emailTemplate().name();
+            templateName = emailDetails.emailTemplate().getName();
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
                 mimeMessage,
